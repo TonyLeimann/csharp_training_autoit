@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 namespace addressbook_tests_autoit
 {
@@ -17,6 +18,15 @@ namespace addressbook_tests_autoit
             CloseGroupDialog();
         }
 
+        public int GetGroupListCount()
+        {
+            OpenGroupsDialog();
+            string count = aux.ControlTreeView(GROUPWINTITLE, "", "WindowsForms10.SysTreeView32.app.0.2c908d51",
+                                 "GetItemCount","#0","");
+            CloseGroupDialog();
+            return int.Parse(count);
+        }
+
         private void CloseGroupDialog()
         {
             aux.ControlClick(GROUPWINTITLE, "", "WindowsForms10.BUTTON.app.0.2c908d54");
@@ -28,29 +38,27 @@ namespace addressbook_tests_autoit
             aux.WinWait(GROUPWINTITLE);
         }
 
-        public List<GroupData> GetGroupList()
-        {
-            List<GroupData> list = new List<GroupData>();
-            OpenGroupsDialog();
-            string count = aux.ControlTreeView(GROUPWINTITLE,"", " WindowsForms10.SysTreeView32.app.0.2c908d51",
-                                 "GetItemCount","#0","");
+        //public List<GroupData> GetGroupList()
+        //{
+        //    List<GroupData> list = new List<GroupData>();
+        //    OpenGroupsDialog();
+        //    string count = aux.ControlTreeView(GROUPWINTITLE,"", "WindowsForms10.SysTreeView32.app.0.2c908d51",
+        //                         "GetItemCount","#0","");
 
-            for (int i = 0; i < int.Parse(count); i++)
-            {
-                string item = aux.ControlTreeView(GROUPWINTITLE, "", " WindowsForms10.SysTreeView32.app.0.2c908d51",
-                                 "GetText", "#0|#"+i, "");
-                list.Add(new GroupData()
-                {
-                    Name = item
-                });
-            }
+        //    //for (int i = 0; i < int.Parse(count); i++)
+        //    //{
+        //    //    string item = aux.ControlTreeView(GROUPWINTITLE, "", " WindowsForms10.SysTreeView32.app.0.2c908d51",
+        //    //                     "GetText", "#0|#"+i, "");
+        //    //    list.Add(new GroupData()
+        //    //    {
+        //    //        Name = item
+        //    //    });
+        //    //}
+    
+        //    CloseGroupDialog();
+        //    return list;
+        //}
 
 
-            
-            
-
-            CloseGroupDialog();
-            return new List<GroupData>();
-        }
     }
 }
