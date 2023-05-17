@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Threading;
 
 namespace addressbook_tests_autoit
 {
@@ -11,15 +12,20 @@ namespace addressbook_tests_autoit
 
         public void Add(GroupData newGroup)
         {
-            OpenGroupsDialog();
             aux.ControlClick(GROUPWINTITLE, "", "WindowsForms10.BUTTON.app.0.2c908d53");
+            aux.WinWait(GROUPWINTITLE);
             aux.Send(newGroup.Name);
+            aux.WinWait(GROUPWINTITLE);
             aux.Send("{ENTER}");
+            aux.WinWait(GROUPWINTITLE);
             CloseGroupDialog();
+            aux.WinWait(WINTITLE);
+
         }
 
         public int GetGroupListCount()
         {
+            
             OpenGroupsDialog();
             string count = aux.ControlTreeView(GROUPWINTITLE, "", "WindowsForms10.SysTreeView32.app.0.2c908d51",
                                  "GetItemCount","#0","");
@@ -27,38 +33,56 @@ namespace addressbook_tests_autoit
             return int.Parse(count);
         }
 
-        private void CloseGroupDialog()
+        public void CloseGroupDialog()
         {
             aux.ControlClick(GROUPWINTITLE, "", "WindowsForms10.BUTTON.app.0.2c908d54");
         }
 
-        private void OpenGroupsDialog()
+        public void OpenGroupsDialog()
         {
             aux.ControlClick(WINTITLE, "", "WindowsForms10.BUTTON.app.0.2c908d512");
             aux.WinWait(GROUPWINTITLE);
         }
 
-        //public List<GroupData> GetGroupList()
-        //{
-        //    List<GroupData> list = new List<GroupData>();
-        //    OpenGroupsDialog();
-        //    string count = aux.ControlTreeView(GROUPWINTITLE,"", "WindowsForms10.SysTreeView32.app.0.2c908d51",
-        //                         "GetItemCount","#0","");
+        public void CheckGroupAnotherCreate()
+        {
+            aux.WinWait("Group editor");
 
-        //    //for (int i = 0; i < int.Parse(count); i++)
-        //    //{
-        //    //    string item = aux.ControlTreeView(GROUPWINTITLE, "", " WindowsForms10.SysTreeView32.app.0.2c908d51",
-        //    //                     "GetText", "#0|#"+i, "");
-        //    //    list.Add(new GroupData()
-        //    //    {
-        //    //        Name = item
-        //    //    });
-        //    //}
-    
-        //    CloseGroupDialog();
-        //    return list;
-        //}
+            string checkGroup = aux.ControlTreeView("Group editor", "", "WindowsForms10.SysTreeView32.app.0.2c908d51", "Exists", "#0|#1", "");
 
+
+            if (int.Parse(checkGroup) == 0)
+            {
+                GroupData group = new GroupData()
+                {
+                    Name = "test"
+                };
+
+
+                Add(group);
+            }
+                      
+        }
+
+        public void SelectDeleteGroup()
+        {
+            OpenGroupsDialog();
+            aux.ControlTreeView("Group editor", "", "WindowsForms10.SysTreeView32.app.0.2c908d51", "Select", "#0|#1", "");
+            aux.ControlClick("Group editor", "", "WindowsForms10.BUTTON.app.0.2c908d51");
+            aux.WinWait("Delete group");
+
+        }
+
+        public void ConfirmDeleteGroup()
+        {
+            aux.ControlClick("Delete group", "", "WindowsForms10.BUTTON.app.0.2c908d52");
+            aux.ControlClick("Delete group", "", "WindowsForms10.BUTTON.app.0.2c908d53");
+
+            CloseGroupDialog();
+
+            aux.WinWait(WINTITLE);
+
+        }
 
     }
 }

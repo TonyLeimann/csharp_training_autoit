@@ -10,8 +10,7 @@ namespace addressbook_tests_autoit
         [Test]
         public void TestGroupCreation()
         {
-            //List<GroupData> oldGroups = app.Groups.GetGroupList();
-
+            
             var oldGroups = app.Groups.GetGroupListCount();
 
             GroupData newGroup = new GroupData()
@@ -19,14 +18,13 @@ namespace addressbook_tests_autoit
                 Name = "test"
             };
 
+            app.Groups.OpenGroupsDialog();
+
             app.Groups.Add(newGroup);
 
             var newGroups = app.Groups.GetGroupListCount();
 
-            //List<GroupData> newGroups = app.Groups.GetGroupList();
-            //oldGroups.Add(newGroup);
-            //oldGroups.Sort();
-            //newGroups.Sort();
+      
             Assert.AreEqual(oldGroups + 1 , newGroups);
 
         }
